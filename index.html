@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda Motorcycle Price Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Rwanda Motorcycle Price Tracker</h1>
+      <p>Compare prices of popular motorcycles in Rwanda</p>
+    </header>
+
+    <main>
+      <div v-if="error" class="error-message">
+        {{ error }}
+        <button @click="fetchData">Retry</button>
+      </div>
+
+      <div v-if="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading motorcycle data...</p>
+      </div>
+
+      <section class="filters">
+        <div class="filter-group">
+          <label for="brand">Brand:</label>
+          <select id="brand" v-model="selectedBrand" :disabled="isLoading">
+            <option value="">All Brands</option>
+            <option v-for="brand in brands" :value="brand">{{ brand }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="price-range">Price Range (RWF):</label>
+          <input type="range" id="price-range" v-model="priceRange" min="1000000" max="8000000" step="100000" :disabled="isLoading">
+          <span>{{ formatCurrency(priceRange) }}</span>
+        </div>
+
+        <div class="filter-group">
+          <label for="engine-size">Engine Size (cc):</label>
+          <select id="engine-size" v-model="selectedEngineSize" :disabled="isLoading">
+            <option value="">All Sizes</option>
+            <option v-for="size in engineSizes" :value="size">{{ size }}</option>
+          </select>
+        </div>
+
+        <button @click="resetFilters" :disabled="isLoading">Reset Filters</button>
+      </section>
+
+      <section class="results">
+        <div v-if="filteredMotorcycles.length === 0 && !isLoading" class="no-results">
+          No motorcycles match your filters. Try adjusting your criteria.
+        </div>
+
+        <div v-for="motorcycle in filteredMotorcycles" :key="motorcycle.id" class="motorcycle-card" @click="showPriceHistory(motorcycle)">
+          <img :src="'images/' + motorcycle.image" :alt="motorcycle.model" loading="lazy" @error="handleImageError">
+          <div class="details">
+            <h3>{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
+            <p class="price">{{ formatCurrency(motorcycle.price) }}</p>
+            <p><strong>CC:</strong> {{ motorcycle.engineSize }}cc</p>
+            <p><strong>Year:</strong> {{ motorcycle.year }}</p>
+            <p><strong>Location:</strong> {{ motorcycle.location }}</p>
+          </div>
+        </div>
+      </section>
+
+      <div v-if="selectedMotorcycle" class="modal" @click.self="selectedMotorcycle = null">
+        <div class="modal-content">
+          <span class="close" @click="selectedMotorcycle = null">&times;</span>
+          <img :src="'images/' + selectedMotorcycle.image" :alt="selectedMotorcycle.model" @error="handleImageError">
+          <h2>{{ selectedMotorcycle.brand }} {{ selectedMotorcycle.model }}</h2>
+          
+          <div v-if="isLoading" class="loading-chart">
+            <div class="spinner"></div>
+            <p>Loading price history...</p>
+          </div>
+          
+          <canvas id="priceChart"></canvas>
+          <div class="price-stats">
+            <p>Current Price: <strong>{{ formatCurrency(selectedMotorcycle.price) }}</strong></p>
+            <p>Average Price: <strong>{{ formatCurrency(averagePrice) }}</strong></p>
+            <p>Lowest Price: <strong>{{ formatCurrency(lowestPrice) }}</strong></p>
+            <p>Highest Price: <strong>{{ formatCurrency(highestPrice) }}</strong></p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2023 Rwanda Motorcycle Price Tracker</p>
+    </footer>
+  </div>
+</body>
+</html>
