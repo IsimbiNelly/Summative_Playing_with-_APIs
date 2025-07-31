@@ -17,5 +17,5 @@ A web application that helps users compare and track motorcycle prices across Rw
 - Chart.js for data visualization
 
 ## Live Demo
-Deployment on github 
+Deployment on github https://isimbinelly.github.io/Summative_Playing_with-_APIs/
 Demo video youtube link https://www.youtube.com/watch?v=PSBbDED-7D8
