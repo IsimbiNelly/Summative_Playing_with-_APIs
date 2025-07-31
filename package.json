@@ -1,0 +1,10 @@
+{
+  "name": "motorcycle-price-tracker",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve -s . -l 8080"
+  },
+  "dependencies": {
+    "serve": "^14.0.1"
+  }
+}
