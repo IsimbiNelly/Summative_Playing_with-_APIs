@@ -18,6 +18,4 @@ A web application that helps users compare and track motorcycle prices across Rw
 
 ## Setup Instructions
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/rwanda-moto-tracker.git
+Demo video youtube link https://www.youtube.com/watch?v=PSBbDED-7D8
