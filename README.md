@@ -16,6 +16,6 @@ A web application that helps users compare and track motorcycle prices across Rw
 - JavaScript (Vue.js 3)
 - Chart.js for data visualization
 
-## Setup Instructions
-
+## Live Demo
+Deployment on github 
 Demo video youtube link https://www.youtube.com/watch?v=PSBbDED-7D8
